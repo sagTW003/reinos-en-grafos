@@ -290,24 +290,16 @@ textarea,input[type=text],input[type=number]{width:100%;font-family:var(--f-mono
   </section>
 
   <section class="panel" aria-label="Competencia contra el bot de GoMagic" id="gomagic">
-    <div class="panel-head"><h2>Competencia contra el bot de GoMagic</h2><span class="eyebrow">18 partidas reales · 17 nov 2026</span></div>
-    <p style="color:var(--muted);max-width:80ch">Enfrentamos cada algoritmo de Reinos en Grafos al bot de <strong style="color:var(--ink)">gomagic.org/es/play-go</strong> en dos niveles gratuitos: el nivel 1 (~30 kyu) y el nivel 6 (~19 kyu). Nuestro motor decidía cada jugada y la colocábamos en GoMagic; el resultado es el conteo oficial de GoMagic (reglas chinas, komi 7,5, retira piedras muertas). Una partida por algoritmo y nivel, siempre con negras.</p>
+    <div class="panel-head"><h2>Competencia contra el bot de GoMagic</h2><span class="eyebrow">4 partidas reales · 17 nov 2026</span></div>
+    <p style="color:var(--muted);max-width:80ch">Enfrentamos los dos algoritmos de Reinos en Grafos al bot de <strong style="color:var(--ink)">gomagic.org/es/play-go</strong> en dos niveles gratuitos: el nivel 1 (~30 kyu) y el nivel 6 (~19 kyu). Nuestro motor decidía cada jugada y la colocábamos en GoMagic; el resultado es el conteo oficial de GoMagic (reglas chinas, komi 7,5, retira piedras muertas). Una partida por algoritmo y nivel, siempre con negras.</p>
     <div class="tablewrap"><table><thead><tr><th>Algoritmo de Reinos en Grafos</th><th style="text-align:right">Nivel 1 · ~30 kyu</th><th style="text-align:right">Nivel 6 · ~19 kyu</th><th style="text-align:right">ms por jugada</th></tr></thead><tbody>
-      <tr class="best"><td>Búsqueda en haz (5 niveles, ancho 6)</td><td class="num">gana +23,5</td><td class="num">pierde −16,5</td><td class="num">4</td></tr>
       <tr class="best"><td>Profundización iterativa con alfa-beta (300 ms)</td><td class="num">gana +13,5</td><td class="num">pierde −22,5</td><td class="num">110–145</td></tr>
-      <tr><td>Alfa-beta (3 niveles)</td><td class="num">gana +73,5</td><td class="num">pierde −56,5</td><td class="num">3–4</td></tr>
-      <tr><td>Alfa-beta con transposiciones (3 niveles)</td><td class="num">gana +73,5</td><td class="num">pierde −56,5</td><td class="num">3–4</td></tr>
-      <tr><td>Minimax en anchura, BFS (3 niveles)</td><td class="num">gana +73,5</td><td class="num">pierde −62,5</td><td class="num">4–5</td></tr>
-      <tr><td>MCTS / UCT (300 simulaciones)</td><td class="num">gana +17,5</td><td class="num">pierde −66,5</td><td class="num">26</td></tr>
-      <tr><td>Minimax en profundidad (3 niveles)</td><td class="num">gana +37,5</td><td class="num">pierde −88,5</td><td class="num">4–5</td></tr>
       <tr><td>MCTS con RAVE (300 simulaciones)</td><td class="num">gana +5,5</td><td class="num">pierde −88,5</td><td class="num">25–28</td></tr>
-      <tr><td>Voraz (1 nivel)</td><td class="num">pierde −88,5</td><td class="num">—</td><td class="num">&lt; 1</td></tr>
-      <tr><td>Aleatorio (línea base)</td><td class="num">pierde −88,5</td><td class="num">—</td><td class="num">&lt; 1</td></tr>
     </tbody></table></div>
     <ul class="reasons">
-      <li><strong>Contra el nivel 1, los 8 algoritmos de búsqueda ganan.</strong> Alfa-beta, transposiciones y BFS se quedaron con todo el tablero (81 a 0). Voraz y aleatorio pierden todo: sin mirar la respuesta del rival rellenan sus propios ojos.</li>
-      <li><strong>Contra el nivel 6, ninguno gana.</strong> Los que más le compiten son la búsqueda en haz (−16,5) y la profundización iterativa (−22,5), los dos que miran más lejos: el haz llega a 5 niveles y la iterativa profundiza mientras le alcance el tiempo. Los de 3 niveles y los de Monte Carlo pierden por mucho más.</li>
-      <li><strong>La profundidad pesa más que el tiempo.</strong> El haz piensa 4 ms por jugada y compite mejor que MCTS y RAVE, que piensan 25 ms: sus simulaciones de 8 jugadas al azar guían mal.</li>
+      <li><strong>Contra el nivel 1, los dos ganan.</strong> La profundización iterativa ganó por 13,5 puntos (51 a 30 + 7,5 de komi) y RAVE por 5,5 (47 a 34 + 7,5).</li>
+      <li><strong>Contra el nivel 6, ninguno gana, pero la iterativa compite.</strong> Perdió por 22,5 puntos (33 a 48 + 7,5), mientras que RAVE perdió todo el tablero (0 a 81 + 7,5).</li>
+      <li><strong>Por qué la iterativa aguanta más.</strong> Aprovecha la poda para mirar más jugadas adelante en el mismo tiempo. RAVE depende de simulaciones de 8 jugadas al azar, que guían mal en Go frente a un rival que castiga los errores.</li>
       <li><strong>Cuidado con una sola partida.</strong> El bot tiene azar, así que una partida por casilla muestra una tendencia, no una prueba. Regla usada: cuando el bot pasaba, nuestro programa también pasaba y GoMagic contaba.</li>
     </ul>
   </section>
