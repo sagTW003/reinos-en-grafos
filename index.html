@@ -262,20 +262,17 @@ textarea,input[type=text],input[type=number]{width:100%;font-family:var(--f-mono
   </section>
 
   <section class="panel" aria-label="Modo asistente" id="assist">
-    <div class="panel-head"><h2>Juega contra el programa</h2><span class="eyebrow">o deja que el grafo te aconseje</span></div>
-    <p style="color:var(--muted);max-width:80ch"><strong style="color:var(--ink)">Jugar contra el programa:</strong> elige tu color (o nigiri), el nivel, el komi y el hándicap, y juega tocando el tablero; el programa responde y explica cada jugada, y el botón «Pista» te muestra qué jugaría él en tu lugar. <strong style="color:var(--ink)">Asistente:</strong> copia la posición de una partida real de Go 9×9 y, en cada turno tuyo, el algoritmo construye su árbol de juego y te recomienda una jugada. Las coordenadas son las de los servidores de Go: columnas A a J sin la I, filas 1 a 9 contadas desde abajo. Úsalo contra bots o para repasar partidas: en partidas contra personas, la mayoría de los servidores prohíbe recibir ayuda de un programa.</p>
+    <div class="panel-head"><h2>Modo asistente</h2><span class="eyebrow">el grafo te dice dónde jugar</span></div>
+    <p style="color:var(--muted);max-width:80ch">Copia la posición de una partida real de Go 9×9 y, en cada turno tuyo, el algoritmo construye su árbol de juego y te recomienda una jugada. Las coordenadas son las de los servidores de Go: columnas A a J sin la I, filas 1 a 9 contadas desde abajo. Úsalo contra bots o para repasar partidas: en partidas contra personas, la mayoría de los servidores prohíbe recibir ayuda de un programa.</p>
     <div class="setup">
-      <div class="field"><label for="asMode">Modo</label><select id="asMode"><option value="vs" selected>Jugar contra el programa</option><option value="asistente">Asistente (te recomienda jugadas)</option></select></div>
-      <div class="field"><label for="asMe">Tus piedras</label><select id="asMe"><option value="1">Negras (primer reino)</option><option value="2">Blancas (segundo reino)</option><option value="0">Nigiri (al azar)</option></select></div>
-      <div class="field"><label for="asAlgo">Algoritmo del programa</label><select id="asAlgo"><option value="iterativa" selected>Profundización iterativa con alfa-beta</option><option value="rave">MCTS con RAVE</option></select></div>
-      <div class="field"><label for="asTime">Nivel (tiempo para pensar)</label><select id="asTime"><option value="20">Nivel 1 · 20 ms</option><option value="100">Nivel 2 · 100 ms</option><option value="300" selected>Nivel 3 · 300 ms</option><option value="1000">Nivel 4 · 1 s</option><option value="2000">Nivel 5 · 2 s</option></select></div>
-      <div class="field"><label for="asKomi">Komi</label><select id="asKomi"><option value="7.5" selected>7,5 (reglas chinas)</option><option value="6.5">6,5 (reglas japonesas)</option><option value="0.5">0,5</option></select></div>
-      <div class="field"><label for="asHandi">Hándicap (piedras negras)</label><select id="asHandi"><option value="0" selected>Sin hándicap</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+      <div class="field"><label for="asMe">Tus piedras</label><select id="asMe"><option value="1">Negras (primer reino)</option><option value="2">Blancas (segundo reino)</option></select></div>
+      <div class="field"><label for="asAlgo">Algoritmo que te aconseja</label><select id="asAlgo"><option value="iterativa" selected>Profundización iterativa con alfa-beta</option><option value="rave">MCTS con RAVE</option></select></div>
+      <div class="field"><label for="asTime">Tiempo para pensar (iterativa)</label><select id="asTime"><option value="20">20 ms</option><option value="100">100 ms</option><option value="300" selected>300 ms</option><option value="1000">1 s</option></select></div>
       <div class="field"><label for="asTurn">Le toca a (si cargas piedras)</label><select id="asTurn"><option value="1">Negras</option><option value="2">Blancas</option></select></div>
       <div class="field" style="grid-column:1/-1"><label for="asSeq">Jugadas desde el inicio, en orden (opción 1)</label><textarea id="asSeq" rows="2" placeholder="E5 D4 C3 pasa F6 …   empiezan las negras y se alternan"></textarea></div>
       <div class="field" style="grid-column:span 2"><label for="asB">Piedras negras en el tablero (opción 2)</label><textarea id="asB" rows="2" placeholder="E5, C3, G7"></textarea></div>
       <div class="field" style="grid-column:span 2"><label for="asW">Piedras blancas en el tablero (opción 2)</label><textarea id="asW" rows="2" placeholder="D4, F6"></textarea></div>
-      <div class="buttons"><button class="primary" id="asStart" type="button">Empezar partida</button><button id="asExit" type="button" disabled>Salir y volver a la batalla</button></div>
+      <div class="buttons"><button class="primary" id="asStart" type="button">Cargar posición</button><button id="asExit" type="button" disabled>Salir del modo asistente</button></div>
     </div>
     <div class="caption" id="asStatus" role="status">Deja todo vacío para empezar desde el tablero vacío, o usa una de las dos opciones. Si llenas la opción 1, la opción 2 se ignora.</div>
     <div class="as-play" id="asPlay" hidden>
@@ -283,8 +280,8 @@ textarea,input[type=text],input[type=number]{width:100%;font-family:var(--f-mono
       <div class="as-side">
         <div class="as-tip" id="asTip"></div>
         <div class="field"><label for="asMove" id="asMoveLbl">Jugada</label>
-          <div class="as-row"><input type="text" id="asMove" autocomplete="off" spellcheck="false" placeholder="E5"><button class="primary" id="asApply" type="button">Aplicar</button><button id="asPass" type="button">Pasa</button><button id="asHint" type="button">Pista</button><button id="asUndo" type="button">Deshacer</button></div></div>
-        <p class="mono" style="color:var(--muted)">Contra el programa, toca una intersección para jugar ahí. En el asistente, tocarla la escribe en la casilla. El árbol completo de cada decisión aparece abajo, en «Árbol de juego».</p>
+          <div class="as-row"><input type="text" id="asMove" autocomplete="off" spellcheck="false" placeholder="E5"><button class="primary" id="asApply" type="button">Aplicar</button><button id="asPass" type="button">Pasa</button><button id="asUndo" type="button">Deshacer</button></div></div>
+        <p class="mono" style="color:var(--muted)">Toca una intersección del tablero para escribirla. El árbol completo de cada recomendación aparece abajo, en «Árbol de juego».</p>
       </div>
     </div>
   </section>
@@ -635,7 +632,7 @@ function boardGraph(b) {
   }
   return { edges, groups, lib };
 }
-function areaScore(b, komi = KOMI) {
+function areaScore(b) {
   let sb = 0, sw = 0, tb = 0, tw = 0; const seen = new Uint8Array(SIZE);
   for (let i = 0; i < SIZE; i++) {
     if (b[i] === 1) sb++; else if (b[i] === 2) sw++;
@@ -651,7 +648,7 @@ function areaScore(b, komi = KOMI) {
       if (hb && !hw) tb += size; else if (hw && !hb) tw += size;
     }
   }
-  return { sb, tb, sw, tw, b: sb + tb, w: sw + tw + komi };
+  return { sb, tb, sw, tw, b: sb + tb, w: sw + tw + KOMI };
 }
 function search(b, toMove, depth, alpha, beta, prevKey, node, K, stats, lastOpp, prune = true, fixed = null) {
   node.order = stats.visit++;
@@ -1022,7 +1019,7 @@ const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag)
 let state, running = false, busy = false, runId = 0, view = null;
 const assist = { on: false, me: 1, rec: null, undo: [], busy: false };
 function newState() {
-  return { komi: KOMI, board: new Int8Array(SIZE), hist: new Set([key(new Int8Array(SIZE))]), toMove: 1, prevKey: '', caps: { 1: 0, 2: 0 }, stolen: { 1: 0, 2: 0 }, moveNo: 0, passes: 0,
+  return { board: new Int8Array(SIZE), hist: new Set([key(new Int8Array(SIZE))]), toMove: 1, prevKey: '', caps: { 1: 0, 2: 0 }, stolen: { 1: 0, 2: 0 }, moveNo: 0, passes: 0,
            lastMove: null, over: false, vertices: 0, evalHist: [], turns: [] };
 }
 const depthOf = () => 3;  /* la iterativa decide su profundidad por tiempo; RAVE no usa niveles */
@@ -2284,7 +2281,7 @@ function renderLegend() {
 }
 function idleBanner() {
   if (state.over) {
-    const s = areaScore(state.board, state.komi), w = s.b > s.w ? 1 : 2;
+    const s = areaScore(state.board), w = s.b > s.w ? 1 : 2;
     return setBanner(`<strong style="color:${fac[w].color}">¡Victoria de ${the(w)}!</strong><br>${name(1)} ${s.b} · ${name(2)} ${s.w}`);
   }
   if (assist.on) return setBanner(`Modo asistente · ${state.toMove === assist.me ? 'te toca a ti' : 'le toca al rival'} (<strong style="color:${fac[state.toMove].color}">${state.toMove === 1 ? 'negras' : 'blancas'}</strong>)`);
@@ -2412,7 +2409,7 @@ function lineOf(rec) { const out = []; let n = rec.root.best; while (n) { out.pu
 
 function renderAnalysis() {
   const box = $('#analysis');
-  const s = areaScore(state.board, state.komi);
+  const s = areaScore(state.board);
   const W = s.b > s.w ? 1 : 2, L = 3 - W, sg = W === 1 ? 1 : -1;
   const cw = countFor(W), cl = countFor(L), pW = predFor(W), pL = predFor(L);
   const effective = [];
@@ -2433,7 +2430,7 @@ function renderAnalysis() {
   const margin = Math.abs(s.b - s.w);
   const wS = W === 1 ? s.sb : s.sw, wT = W === 1 ? s.tb : s.tw, lS = L === 1 ? s.sb : s.sw, lT = L === 1 ? s.tb : s.tw;
   const reasons = [];
-  reasons.push(`<strong>Resultado.</strong> ${The(W)} ganan por ${margin.toFixed(1)} puntos con conteo por área: ${wS} ${pw(W, wS)} en pie + ${wT} tierras rodeadas solo por ellos${W === 2 ? ` + ${state.komi} de komi` : ''}. ${The(L)} terminaron con ${lS} ${pw(L, lS)} + ${lT} tierras${L === 2 ? ` + ${state.komi} de komi` : ''}.`);
+  reasons.push(`<strong>Resultado.</strong> ${The(W)} ganan por ${margin.toFixed(1)} puntos con conteo por área: ${wS} ${pw(W, wS)} en pie + ${wT} tierras rodeadas solo por ellos${W === 2 ? ` + ${KOMI} de komi` : ''}. ${The(L)} terminaron con ${lS} ${pw(L, lS)} + ${lT} tierras${L === 2 ? ` + ${KOMI} de komi` : ''}.`);
   reasons.push(cw.captura >= cl.captura
     ? `<strong>Ganaron las batallas.</strong> ${The(W)} conquistaron ${cw.captura} ${pw(L, cw.captura)} (capturas) y pusieron bajo asedio ${cw.atari} ${plural(cw.atari, 'vez', 'veces')} (ataris); ${the(L)} conquistaron ${cl.captura} y asediaron ${cl.atari} ${plural(cl.atari, 'vez', 'veces')}. Cada conquista deja un hueco que pasa a ser tierra del conquistador.`
     : `<strong>Perdieron más piezas, pero ganaron más tierra.</strong> ${The(L)} conquistaron más (${cl.captura} contra ${cw.captura}), pero ${the(W)} usaron esos turnos del rival para cerrar zonas más grandes del mapa.`);
@@ -2455,7 +2452,7 @@ function renderAnalysis() {
     <div class="panel-head"><h2>Por qué ganaron ${the(W)}</h2><span class="eyebrow">Análisis final · ${state.turns.length} grafos</span></div>
     <div class="final">
       <div><div class="big" style="color:${fac[W].color}">${name(W)} ${W === 1 ? s.b : s.w}</div><div class="det">reino vencedor</div></div>
-      <div><div class="big" style="color:var(--muted)">${name(L)} ${L === 1 ? s.b : s.w}</div><div class="det">komi ${state.komi} para ${the(2)}</div></div>
+      <div><div class="big" style="color:var(--muted)">${name(L)} ${L === 1 ? s.b : s.w}</div><div class="det">komi ${KOMI} para ${the(2)}</div></div>
     </div>
     <ul class="reasons">${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
     <div class="tablewrap"><table style="max-width:600px"><thead><tr><th>Concepto (Go)</th><th style="text-align:right">${name(W)}</th><th style="text-align:right">${name(L)}</th></tr></thead>
@@ -2705,11 +2702,8 @@ const badCoord = t => /^I/i.test(t.trim()) ? `«${t}» no existe: en Go la colum
 function asStatus(html, err) { const el = $('#asStatus'); el.innerHTML = html; el.classList.toggle('as-err', !!err); }
 function asCfg() {
   const me = assist.me;
-  return { algo: $('#asAlgo').value, depth: depthOf(me), K: +$('#width').value, sims: +$('#sims').value, timeMs: +$('#asTime').value, mode: 'tiempo' };
+  return { algo: $('#asAlgo').value, depth: depthOf(me), K: +$('#width').value, sims: +$('#sims').value, timeMs: +$('#asTime').value, mode: 'profundidad' };
 }
-const asVs = () => $('#asMode').value === 'vs';
-/* Puntos de hándicap del 9×9 en el orden habitual: G7, C3, G3, C7, E5 */
-const HANDI = [[6, 2], [2, 6], [6, 6], [2, 2], [4, 4]].map(([x, y]) => y * N + x);
 /* Lee la posición escrita y la valida con las reglas del motor */
 function asBuildPosition() {
   const s = newState(), seq = tokens($('#asSeq').value);
@@ -2734,12 +2728,10 @@ function asBuildPosition() {
     if (b[idx]) return { err: `${coord(idx)} aparece dos veces.` };
     b[idx] = c;
   }
-  const H = +$('#asHandi').value;
-  for (const i of HANDI.slice(0, H)) if (!b[i]) b[i] = 1;
   for (let i = 0; i < SIZE; i++) if (b[i] && groupInfo(b, i).libs === 0) return { err: `El grupo ${colorName(b[i])} en ${coord(i)} no tiene libertades: en una partida real ya habría sido capturado. Revisa las piedras.` };
-  s.board = b; s.hist = new Set([key(b)]); s.toMove = H ? 2 : +$('#asTurn').value;
+  s.board = b; s.hist = new Set([key(b)]); s.toMove = +$('#asTurn').value;
   const n = b.reduce((a, v) => a + (v ? 1 : 0), 0);
-  return { s, desc: (n ? `${n} ${plural(n, 'piedra cargada', 'piedras cargadas')}` : 'tablero vacío') + (H ? `, con ${H} piedras de hándicap (empiezan las blancas)` : '') };
+  return { s, desc: n ? `${n} ${plural(n, 'piedra cargada', 'piedras cargadas')}` : 'tablero vacío' };
 }
 function asLoad() {
   const r = asBuildPosition();
@@ -2747,9 +2739,7 @@ function asLoad() {
   runId++; running = false; busy = false;
   applyFactions();
   state = r.s;
-  state.komi = +$('#asKomi').value;
-  const pick = +$('#asMe').value;
-  Object.assign(assist, { on: true, me: pick || (Math.random() < .5 ? 1 : 2), rec: null, undo: [], busy: false });
+  Object.assign(assist, { on: true, me: +$('#asMe').value, rec: null, undo: [], busy: false });
   $('#reviewBar').hidden = true; emptyAnalysis();
   boardView.reset(); boardView.show(state.board, { animate: false, last: state.lastMove }); boardView.clearCands();
   renderLog(); renderSpark(); renderScore(); updateButtons();
@@ -2782,32 +2772,10 @@ async function asNext() {
   idleBanner(); updateButtons();
   const me = assist.me, to = state.toMove;
   if (state.over) {
-    const s = areaScore(state.board, state.komi), w = s.b > s.w ? 1 : 2;
+    const s = areaScore(state.board), w = s.b > s.w ? 1 : 2;
     asDraw();
-    $('#asTip').innerHTML = `<span class="eyebrow">Partida terminada</span><span class="as-big">${w === me ? 'Ganaste' : 'Ganó el rival'}</span><span>Negras ${s.b} · blancas ${s.w} (con ${state.komi} de komi). El análisis final está más abajo.</span>`;
+    $('#asTip').innerHTML = `<span class="eyebrow">Partida terminada</span><span class="as-big">${w === me ? 'Ganaste' : 'Ganó el rival'}</span><span>Negras ${s.b} · blancas ${s.w} (con ${KOMI} de komi). El análisis final está más abajo.</span>`;
     $('#asMoveLbl').textContent = 'Jugada'; return;
-  }
-  if (asVs()) {
-    if (to === me) {
-      const t = state.turns.at(-1), prog = t && t.color !== me && t.algo !== 'manual' ? t : null;
-      const best = prog && prog.root.best, why = best && best.desc && best.desc.tags.length ? best.desc.tags.map(g => g.why).join('; ') : '';
-      asDraw([], null);
-      $('#asTip').innerHTML = `<span class="eyebrow">Tu turno · ${colorName(me)}</span>` +
-        (prog ? `<span>El programa jugó <b>${prog.move != null ? coord(prog.move) : 'pasa'}</b>${why ? `: ${why}` : ''}.</span>` : '<span>Toca una intersección del tablero para jugar.</span>') +
-        '<span class="mono" style="color:var(--muted)">¿Dudas? Pulsa «Pista» y el programa te muestra qué jugaría en tu lugar.</span>';
-      $('#asMoveLbl').textContent = `Tu jugada (${colorName(me)})`;
-      $('#asMove').value = '';
-      return;
-    }
-    assist.busy = true;
-    $('#asTip').innerHTML = `<span class="eyebrow">Turno del programa</span><span>${ALGOS[$('#asAlgo').value].short} está construyendo su árbol de juego…</span>`;
-    await sleep(40);
-    if (!assist.on || !asVs() || state.over || state.toMove === me) { assist.busy = false; return; }
-    const rec = think(asCfg());
-    assist.rec = rec; assist.busy = false;
-    showRec(rec, 0);
-    asApply(rec.move != null ? coord(rec.move) : 'pasa');
-    return;
   }
   if (to !== me) {
     const pred = asPredicted();
@@ -2866,15 +2834,13 @@ function asApply(text) {
   assist.rec = null;
   runId++;
   commit(rec);
-  asStatus(`${colorName(color).charAt(0).toUpperCase() + colorName(color).slice(1)} ${move == null ? 'pasan' : 'en ' + coord(move)}${rec.cap ? ` · capturan ${rec.cap}` : ''}${rec === sug ? (asVs() && color !== assist.me ? ' (jugada del programa)' : ' (la jugada recomendada)') : color === assist.me && sug ? ` (el algoritmo recomendaba ${sug.move != null ? coord(sug.move) : 'pasar'})` : ''}.`);
+  asStatus(`${colorName(color).charAt(0).toUpperCase() + colorName(color).slice(1)} ${move == null ? 'pasan' : 'en ' + coord(move)}${rec.cap ? ` · capturan ${rec.cap}` : ''}${rec === sug ? ' (la jugada recomendada)' : color === assist.me && sug ? ` (el algoritmo recomendaba ${sug.move != null ? coord(sug.move) : 'pasar'})` : ''}.`);
   asNext();
 }
 function asUndo() {
   if (!assist.on || assist.busy) return;
-  let s = assist.undo.pop();
+  const s = assist.undo.pop();
   if (!s) { asStatus('No hay jugadas para deshacer desde que cargaste la posición.', true); return; }
-  /* contra el programa se deshace también su respuesta, para volver a tu turno */
-  while (asVs() && s.toMove !== assist.me && assist.undo.length) s = assist.undo.pop();
   runId++;
   const { lastT, ...rest } = s;
   Object.assign(state, rest);
@@ -2887,7 +2853,7 @@ function asUndo() {
   asNext();
 }
 $('#asStart').addEventListener('click', asLoad);
-$('#asExit').addEventListener('click', () => { resetGame(); asStatus('Saliste de la partida: la batalla entre reinos está otra vez disponible.'); });
+$('#asExit').addEventListener('click', () => { resetGame(); asStatus('Saliste del modo asistente: la batalla entre reinos está otra vez disponible.'); });
 $('#asApply').addEventListener('click', () => asApply());
 $('#asPass').addEventListener('click', () => asApply('pasa'));
 $('#asUndo').addEventListener('click', asUndo);
@@ -2896,25 +2862,10 @@ $('#asBoard').addEventListener('click', e => {
   const r = e.currentTarget.getBoundingClientRect(), s = 350 / (r.width || 350), st = 290 / 8;
   const col = Math.round(((e.clientX - r.left) * s - 30) / st), row = Math.round(((e.clientY - r.top) * s - 30) / st);
   if (col < 0 || col >= N || row < 0 || row >= N) return;
-  $('#asMove').value = coord(row * N + col);
-  if (asVs() && assist.on && state.toMove === assist.me) asApply(); else $('#asMove').focus({ preventScroll: true });
+  $('#asMove').value = coord(row * N + col); $('#asMove').focus({ preventScroll: true });
 });
-$('#asHint').addEventListener('click', async () => {
-  if (!assist.on || assist.busy || state.over || state.toMove !== assist.me) return;
-  assist.busy = true;
-  $('#asTip').innerHTML = '<span class="eyebrow">Pista</span><span>Construyendo el árbol de juego…</span>';
-  await sleep(40);
-  if (!assist.on || state.toMove !== assist.me) { assist.busy = false; return; }
-  const rec = think(asCfg());
-  assist.rec = rec; assist.busy = false;
-  $('#asTip').innerHTML = asTipHtml(rec);
-  asDraw(rec.root.children.map(c => c.move), rec.move);
-  $('#asMove').value = rec.move != null ? coord(rec.move) : 'pasa';
-  showRec(rec, 300);
-});
-$('#asMode').addEventListener('change', () => { if (assist.on && !state.over && $('#reviewBar').hidden) asNext(); });
 ['#asAlgo', '#asTime'].forEach(id => $(id).addEventListener('change', () => { if (assist.on && !state.over && state.toMove === assist.me && $('#reviewBar').hidden) asNext(); }));
-$('#asMe').addEventListener('change', () => { if (assist.on && +$('#asMe').value) { assist.me = +$('#asMe').value; asStatus(`Ahora juegas con las <strong>${colorName(assist.me)}</strong>.`); asNext(); } });
+$('#asMe').addEventListener('change', () => { if (assist.on) { assist.me = +$('#asMe').value; asStatus(`Ahora juegas con las <strong>${colorName(assist.me)}</strong>.`); asNext(); } });
 
 /* =========================================================
    Arranque
